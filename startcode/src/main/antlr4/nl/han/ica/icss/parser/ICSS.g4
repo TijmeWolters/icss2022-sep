@@ -41,9 +41,26 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
-
-
-
 //--- PARSER: ---
+
 stylesheet: EOF;
 
+pixelLiteral: PIXELSIZE;
+colorLiteral: COLOR;
+percentageLiteral: PERCENTAGE;
+scalarLiteral: SCALAR;
+boolLiteral: TRUE | FALSE;
+
+literal: colorLiteral | percentageLiteral | scalarLiteral | boolLiteral | pixelLiteral;
+
+//Variables
+variableReference: CAPITAL_IDENT;
+
+variableAssignment: variableReference ASSIGNMENT_OPERATOR literal SEMICOLON;
+
+//Operations
+expression: expression ('*'|'/') expression | expression ('+'|'-') expression | (literal | variableReference) | '('expression')';
+
+//CSS Rules
+classSelector: CLASS_IDENT;
+propertyName: LOWER_IDENT;
