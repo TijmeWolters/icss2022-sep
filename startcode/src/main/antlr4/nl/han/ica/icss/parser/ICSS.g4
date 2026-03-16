@@ -72,5 +72,5 @@ styleRule: selector declaration;
 properties: propertyName COLON (literal | variableReference | expression) SEMICOLON;
 
 //if statements
-ifClause: IF BOX_BRACKET_OPEN (boolLiteral | variableReference) BOX_BRACKET_CLOSE declaration;
-elseClause: ifClause ELSE declaration;
+ifClause: IF BOX_BRACKET_OPEN (boolLiteral | variableReference) BOX_BRACKET_CLOSE declaration elseClause?;
+elseClause: ELSE declaration;
