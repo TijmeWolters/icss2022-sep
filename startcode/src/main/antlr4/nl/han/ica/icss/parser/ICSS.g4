@@ -31,7 +31,7 @@ CAPITAL_IDENT: [A-Z] [A-Za-z0-9_]*;
 //All whitespace is skipped
 WS: [ \t\r\n]+ -> skip;
 
-//
+//Operators
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 SEMICOLON: ';';
@@ -41,36 +41,12 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
+
+
+
 //--- PARSER: ---
-
-stylesheet: (variableAssignment | styleRule)+ | EOF;
-
-pixelLiteral: PIXELSIZE;
-colorLiteral: COLOR;
-percentageLiteral: PERCENTAGE;
-scalarLiteral: SCALAR;
-boolLiteral: TRUE | FALSE;
-
-literal: colorLiteral | percentageLiteral | scalarLiteral | boolLiteral | pixelLiteral;
-declaration: OPEN_BRACE (properties | ifClause)+ CLOSE_BRACE;
-//Variables
-variableReference: CAPITAL_IDENT;
-
-variableAssignment: variableReference ASSIGNMENT_OPERATOR literal SEMICOLON;
-
-//Operations
-expression: expression ('*'|'/') expression | expression ('+'|'-') expression | (literal | variableReference) | '('expression')';
-
-//CSS Rules
-classSelector: CLASS_IDENT;
-propertyName: LOWER_IDENT;
-idSelector: ID_IDENT;
-tagSelector: LOWER_IDENT;
-
-selector: tagSelector | idSelector | classSelector;
-styleRule: selector declaration;
-properties: propertyName COLON (literal | variableReference | expression) SEMICOLON;
-
-//if statements
-ifClause: IF BOX_BRACKET_OPEN (boolLiteral | variableReference) BOX_BRACKET_CLOSE declaration elseClause?;
-elseClause: ELSE declaration;
+stylesheet: stylerule+ EOF;
+stylerule: selector OPEN_BRACE declaration* CLOSE_BRACE;
+selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
+declaration: LOWER_IDENT COLON expression SEMICOLON;
+expression: COLOR | PIXELSIZE;
