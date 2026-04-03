@@ -13,6 +13,7 @@ public class Checker {
     private LinkedList<HashMap<String, ExpressionType>> variableTypes;
 
     public void check(AST ast) {
+        // Track variable types per scope so lookups follow the nested ICSS structure.
         variableTypes = new LinkedList<>();
         checkStylesheet(ast.root);
     }
@@ -49,6 +50,7 @@ public class Checker {
     }
 
     private void checkDeclaration(Declaration declaration) {
+        // Each property only accepts a small set of expression types.
         ExpressionType expressionType = checkExpression(declaration.expression);
         switch (declaration.property.name) {
             case "background-color":
@@ -142,6 +144,7 @@ public class Checker {
     }
 
     private ExpressionType checkOperation(Operation operation) {
+        // Reject unsupported literal types before checking operand compatibility.
         for (ASTNode child : operation.getChildren()) {
             if (child instanceof ColorLiteral) {
                 child.setError("Color literals are not allowed in operations");

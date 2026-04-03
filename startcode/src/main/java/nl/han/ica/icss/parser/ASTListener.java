@@ -26,6 +26,7 @@ public class ASTListener extends ICSSBaseListener {
 
 	public ASTListener() {
 		ast = new AST();
+		// Keep track of the current parent node while walking the parse tree.
 		currentContainer = new HANStack<>();
 	}
 	public AST getAST() {
@@ -34,6 +35,7 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterStylesheet(ICSSParser.StylesheetContext ctx) {
+		// Start a new root container for the stylesheet.
 		Stylesheet stylesheet = new Stylesheet();
 		currentContainer.push(stylesheet);
 	}
@@ -52,6 +54,7 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void exitStylerule(ICSSParser.StyleruleContext ctx) {
+		// When a rule is complete, attach it to its parent node.
 		Stylerule stylerule = (Stylerule) currentContainer.pop();
 		currentContainer.peek().addChild(stylerule);
 	}
@@ -147,6 +150,7 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void exitLiteral(ICSSParser.LiteralContext ctx) {
+		// Convert the parsed token into the matching AST literal node.
 		Expression expression;
 		if (ctx.COLOR() != null) {
 			expression = new ColorLiteral(ctx.COLOR().getText());

@@ -13,6 +13,7 @@ public class Generator {
 	}
 
 	private String generateStylesheet(Stylesheet sheet) {
+		// Only stylerules are emitted in the final CSS output.
 		StringBuilder stylesheet = new StringBuilder();
 		for (ASTNode child : sheet.getChildren()) {
 			if (child instanceof Stylerule) {
@@ -23,6 +24,7 @@ public class Generator {
 	}
 
 	private String generateStylerule(Stylerule rule) {
+		// Build one CSS rule from its selector list and declarations.
 		StringBuilder stylerule = new StringBuilder();
 		stylerule.append(generateSelector(rule.selectors));
 
@@ -53,6 +55,7 @@ public class Generator {
 	}
 
 	private String generateLiteral(Literal expression) {
+		// Convert the typed AST literal back to CSS text.
 		if (expression instanceof ColorLiteral) {
 			return ((ColorLiteral) expression).value;
 		} else if (expression instanceof PercentageLiteral) {

@@ -25,10 +25,12 @@ public class Evaluator implements Transform {
 
     @Override
     public void apply(AST ast) {
+        // Resolve expressions top-down and replace them with concrete literals where possible.
         applyStyleSheet(ast.root);
     }
 
     private void applyStyleSheet(Stylesheet sheet) {
+        // Keep a fresh scope for stylesheet-level variables.
         variableValues.addFirst(new HashMap<>());
         List<ASTNode> nodesToRemove = new ArrayList<>();
 
@@ -53,6 +55,7 @@ public class Evaluator implements Transform {
     }
 
     private List<ASTNode> applyIfClause(IfClause ifClause) {
+        // Only the branch that matches the evaluated condition survives.
         Literal conditionResult = evaluateExpression(ifClause.conditionalExpression);
         boolean ifClauseIsTrue = ((BoolLiteral) conditionResult).value;
 
@@ -98,6 +101,7 @@ public class Evaluator implements Transform {
     }
 
     private Literal evaluateExpression(Expression expression) {
+        // Expressions are reduced recursively until only literals remain.
         if (expression instanceof Literal) {
             return (Literal) expression;
         } else if (expression instanceof MultiplyOperation) {
